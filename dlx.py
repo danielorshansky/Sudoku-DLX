@@ -1,4 +1,5 @@
 import math
+import random
 
 class Node: # a node in a circular quadruply linked list
     def __init__(self, header = None):
@@ -22,7 +23,7 @@ class Header(Node): # a header node for each column
             while horizontal_node != vertical_node: # unlink the nodes in the rows
                 horizontal_node.down.up = horizontal_node.up
                 horizontal_node.up.down = horizontal_node.down
-                horizontal_node.header.count -= 1
+                horizontal_node.header.count -= 1 # remove one from header count
                 horizontal_node = horizontal_node.right
             vertical_node = vertical_node.down
     
@@ -35,7 +36,7 @@ class Header(Node): # a header node for each column
             while horizontal_node != vertical_node: # relink the nodes in the rows
                 horizontal_node.down.up = self
                 horizontal_node.up.down = self
-                horizontal_node.header.count += 1
+                horizontal_node.header.count += 1 # readd one to header count
                 horizontal_node = horizontal_node.right
             vertical_node = vertical_node.down
 
@@ -62,7 +63,7 @@ class DLX:
     def create_links(self, board, n): # pass the board and size of n x n sudoku
         box_size = int(math.sqrt(n))
         headers = [Header() for _ in range(n ** 2 * 4)]
-        for header in headers:
+        for header in headers: # generate and link all headers
             header.right = self.root
             header.left = self.root.left
             self.root.left.right = header
@@ -87,7 +88,7 @@ class DLX:
                         node.header.count += 1 # add one to the count of the header
                         node.data = [row, column, value] # set the data of the node
                 else: # if the value is not set, create all the constraints for its position
-                    for x in range(n): # loop through all possible values
+                    for x in random.sample(range(n), n): # loop through all possible values
                         cell_constraint = Node(headers[n * row + column]) # nodes for the row-column constraints
                         row_constraint = Node(headers[n ** 2 + row * n + x]) # nodes for the row-number constraints
                         column_constraint = Node(headers[n ** 2 * 2 + column * n + x]) # nodes for the column-number constraints
