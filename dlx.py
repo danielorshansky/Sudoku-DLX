@@ -1,3 +1,6 @@
+# this implements dancing links and Knuth's algorithm x
+# this is specifically designed for sudoku but the same concepts can be applied to all exact-cover problems
+
 import math
 import random
 
