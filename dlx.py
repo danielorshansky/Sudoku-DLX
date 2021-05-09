@@ -39,7 +39,7 @@ class Header(Node): # a header node for each column
             while horizontal_node != vertical_node: # relink the nodes in the rows
                 horizontal_node.down.up = self
                 horizontal_node.up.down = self
-                horizontal_node.header.count += 1 # readd one to header count
+                horizontal_node.header.count += 1 # add one back to header count
                 horizontal_node = horizontal_node.right
             vertical_node = vertical_node.down
 
@@ -48,17 +48,18 @@ class DLX:
         self.root = Header()
         self.solutions = []
     
-    def get_minimum(self): # find the column with the minimum 1s
-        header = self.root.right.right
-        minimum = self.root.right
+    def get_minimum(self): # find the column with the minimum nodes
+        header = self.root.right
+        minimum = None
         while header != self.root:
             if header.count == 0:
                 header.left.right = header.right
                 header.right.left = header.left
-                continue
-            if header.count == 1:
+            elif header.count == 1:
                 return header
-            if header.count < minimum.count:
+            elif not minimum:
+                minimum = header
+            elif header.count < minimum.count:
                 minimum = header
             header = header.right
         return minimum
@@ -108,11 +109,14 @@ class DLX:
                             node.data = [row, column, x + 1] # set the data of the node
     
     def search(self):
-        if self.root.right == self.root: # if there are no columns left, return the solution
+        if self.root.right == self.root: # if there are no columns left, it is solved
             return True
 
         header = self.get_minimum()
+        if header == None: # if all columns left are empty, it is solved
+            return False
         header.cover() # cover the minimum columns
+
         vertical_node = header.down
         while vertical_node != header: # iterate through the rows
             self.solutions.append(vertical_node)
@@ -125,6 +129,8 @@ class DLX:
             solved = self.search() # move to the next level
             if solved:
                 return True
+            else:
+                return False
 
             vertical_node = self.solutions.pop() # if the solution is not possible, uncover the column and remove the row from the solution
 
