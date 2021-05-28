@@ -129,8 +129,6 @@ class DLX:
             solved = self.search() # move to the next level
             if solved:
                 return True
-            else:
-                return False
 
             vertical_node = self.solutions.pop() # if the solution is not possible, uncover the column and remove the row from the solution
 
